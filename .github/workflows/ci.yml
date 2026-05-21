@@ -1,0 +1,68 @@
+name: Java CI
+
+# Triggerauslösung
+on:
+    # startet bei pull request
+    pull_request:
+
+    # manuell workflow starten
+    workflow_dispatch:
+
+# Aufgaben für die CI
+jobs:
+    # kompilieren
+    build:
+        # ausführen auf ubuntu (Betriebssystem von Linux)
+        runs-on: ubuntu-latest
+
+        # Schritte für den Job
+        steps:
+            # richtet git ein und lädt den aktuellen Branch runter
+            - name: Code auschecken
+                # vorgefertigtes Skript
+              uses: actions/checkout@v4
+
+            # installiert java
+            - name: Java 25 einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+
+            - name: Projekt kompilieren
+              run: ./gradlew classes
+
+    test:
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Code auschecken
+              uses: actions/checkout@v4
+
+            - name: Java 25 einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+
+            - name: Test ausführen
+              run: ./gradlew test
+
+    # formatieren
+    format:
+        needs: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Code auschecken
+              uses: actions/checkout@v4
+
+            - name: Java 25 einrichten
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '25'
+                  distribution: 'temurin'
+
+            - name: Format prüfen
+              run: ./gradlew spotlessCheck
