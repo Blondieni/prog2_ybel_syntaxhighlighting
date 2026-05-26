@@ -19,10 +19,24 @@ public final class MiniJavaTokens {
   public static List<Token> defaultTokens() {
     return List.of(
         // Example: string literals (students should define further tokens below)
-        Token.of(Pattern.compile("\"([^\"\\\\]|\\\\.)*\""), MiniJavaColours.STRING_LITERAL_COLOUR)
+        Token.of(Pattern.compile("\"([^\"\\\\]|\\\\.)*\""), MiniJavaColours.STRING_LITERAL_COLOUR),
 
         // TODO: Define additional tokens for MiniJava, e.g. character literals, keywords,
         // annotations, comments, identifiers, numbers, operators, etc.
-        );
+
+        //  // -> FÜr Kommentar
+        //  . -> beliebiges Zeichen
+        //  * -> beliebig viel oder kein
+        Token.of(Pattern.compile("//.*"), MiniJavaColours.LINE_COMMENT_COLOUR),
+
+        // \ escape
+        // \s Whitespace (Leerzeichen, Tabulator, Newline)
+        // \S jedes Zeichen außer Whitespaces: [^\s]
+        // *? non-greedy Variante von X* - Stopt beim ersten Sternchen
+        // [] Behälter zum auswählen
+        Token.of(Pattern.compile("/\\*[\\s\\S]*?\\*/"), MiniJavaColours.BLOCK_COMMENT_COLOUR)
+
+
+    );
   }
 }
