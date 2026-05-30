@@ -18,7 +18,7 @@ public final class MiniJavaTokens {
   // pattern can be selected as the "highlighted" region.
   public static List<Token> defaultTokens() {
     return List.of(
-        // Example: string literals (students should define further tokens below)
+        // 0. Example: string literals (students should define further tokens below)
         Token.of(Pattern.compile("\"([^\"\\\\]|\\\\.)*\""), MiniJavaColours.STRING_LITERAL_COLOUR),
 
         // TODO: Define additional tokens for MiniJava, e.g. character literals, keywords,
@@ -26,17 +26,28 @@ public final class MiniJavaTokens {
 
         //  // -> FÜr Kommentar
         //  . -> beliebiges Zeichen
-        //  * -> beliebig viel oder kein
+        // 1.  * -> beliebig viel oder kein
         Token.of(Pattern.compile("//.*"), MiniJavaColours.LINE_COMMENT_COLOUR),
 
         // \ escape
         // \s Whitespace (Leerzeichen, Tabulator, Newline)
         // \S jedes Zeichen außer Whitespaces: [^\s]
         // *? non-greedy Variante von X* - Stopt beim ersten Sternchen
-        // [] Behälter zum auswählen
-        Token.of(Pattern.compile("/\\*[\\s\\S]*?\\*/"), MiniJavaColours.BLOCK_COMMENT_COLOUR)
+        // 2. [] Behälter zum auswählen
+        Token.of(Pattern.compile("/\\*[\\s\\S]*?\\*/"), MiniJavaColours.BLOCK_COMMENT_COLOUR),
 
+        // 3. Javadoc Kommentare /** .. */
+        Token.of(Pattern.compile("/\\*\\*[\\s\\S]*?\\*/"), MiniJavaColours.JAVADOC_COMMENT_COLOUR),
 
-    );
+        // 4. ein Zeichen zwischen 'und  '
+        Token.of(Pattern.compile("'([^\"\\\\]|\\\\.)'"), MiniJavaColours.CHAR_LITERAL_COLOUR),
+
+        // 5. Keywords package, import, class, public, private, final, return, null, new
+        Token.of(
+            Pattern.compile("\\b(package|import|class|public|private|final|return|null|new)\\b"),
+            MiniJavaColours.KEYWORD_COLOUR),
+
+        // 6. Annotationen beginnen mit @, gefolgt von Buchstaben oder Minuszeichen
+        Token.of(Pattern.compile("@+"), MiniJavaColours.ANNOTATION_COLOUR));
   }
 }
