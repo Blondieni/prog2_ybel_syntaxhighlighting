@@ -2,6 +2,8 @@ package highlighting.regex;
 
 import highlighting.core.HighlightRegion;
 import highlighting.core.SyntaxHighlighter;
+import highlighting.presets.MiniJavaTokens;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Implement a simple regex-based highlighting strategy. Unlike the scanning approach, this
@@ -17,7 +19,12 @@ public class RegexHighlighter extends SyntaxHighlighter {
   // {@code HighlightRegion}s, and combine all of these regions into a single list.
   @Override
   public List<HighlightRegion> collectMatches(String text) {
-    throw new UnsupportedOperationException("not implemented yet");
+    List<HighlightRegion> allMatches = new ArrayList<>();
+    for (Token element : MiniJavaTokens.defaultTokens()) {
+      List<HighlightRegion> matchesFromToken = element.test(text);
+      allMatches.addAll(matchesFromToken);
+    }
+    return allMatches;
   }
 
   // TODO: Resolve overlapping regions. Assume that {@code regions} has been normalised and sorted.
@@ -26,6 +33,26 @@ public class RegexHighlighter extends SyntaxHighlighter {
   // position are preferred because of the sorting in {@code normalize}.
   @Override
   public List<HighlightRegion> resolveConflicts(List<HighlightRegion> regions) {
-    throw new UnsupportedOperationException("not implemented yet");
+    if (regions.isEmpty()) {
+      return regions;
+    }
+
+    List<HighlightRegion> saubereListe = new java.util.ArrayList<>();
+
+    HighlightRegion letzterAkzeptierter = regions.get(0);
+    saubereListe.add(letzterAkzeptierter);
+
+    for (int i = 1; i < regions.size(); i++) {
+      HighlightRegion aktuelles = regions.get(i);
+
+      if (aktuelles.start() < letzterAkzeptierter.end()) {
+        continue;
+      } else {
+        saubereListe.add(aktuelles);
+        letzterAkzeptierter = aktuelles;
+      }
+    }
+
+    return saubereListe;
   }
 }
