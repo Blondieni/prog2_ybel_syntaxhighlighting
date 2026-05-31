@@ -48,6 +48,6 @@ public final class MiniJavaTokens {
             MiniJavaColours.KEYWORD_COLOUR),
 
         // 6. Annotationen beginnen mit @, gefolgt von Buchstaben oder Minuszeichen
-        Token.of(Pattern.compile("@+"), MiniJavaColours.ANNOTATION_COLOUR));
+        Token.of(Pattern.compile("@[a-zA-Z_0-9]+"), MiniJavaColours.ANNOTATION_COLOUR));
   }
 }
